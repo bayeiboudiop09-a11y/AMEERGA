@@ -197,6 +197,7 @@ h2{font-size:clamp(30px,4.2vw,46px);margin-bottom:14px}
 .fcard input[type=text],.fcard input[type=tel],.fcard input[type=date],.fcard select,.fcard textarea{width:100%;padding:13px 14px;border:1px solid var(--line-strong);border-radius:10px;background:var(--paper);color:var(--ink);font:inherit;transition:border-color .2s,box-shadow .2s}
 .fcard textarea{min-height:96px;resize:vertical}
 .fcard input:focus,.fcard select:focus,.fcard textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px color-mix(in srgb,var(--green) 18%,transparent)}
+.dmy{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr) minmax(0,1fr);gap:8px}
 .o{display:flex;gap:12px;align-items:flex-start;padding:8px 0;cursor:pointer}
 .o input{margin-top:4px;accent-color:var(--green);width:20px;height:20px;flex:none}
 .fcard.err{border-color:var(--ko);box-shadow:0 0 0 1px var(--ko)}
@@ -1450,7 +1451,7 @@ err:["Réviser seulement la veille.","Relire passivement sans se tester.","Négl
 const YN=["Oui","Non"];
 const S=[
 ["SECTION 1 — Identification du nouveau bachelier",[
-["Nom","t",1,0,"Exemple : DIOP"],["Prénom(s)","t",1,0,"Exemple : Cheikh Ibrahima"],["Date de naissance","d",1],["Lieu de naissance","t",1],
+["Nom","t",1,0,"Exemple : DIOP"],["Prénom(s)","t",1,0,"Exemple : Cheikh Ibrahima"],["Date de naissance","dmy",1],["Lieu de naissance","t",1],
 ["Sexe","r",1,["Masculin","Féminin"]],["Numéro de téléphone du bachelier","tel",1,0,"Numéro joignable sur WhatsApp si possible."],
 ["Adresse actuelle","p",1,0,"Précisez votre lieu de résidence actuel : quartier, commune ou ville."],["Êtes-vous actuellement à Dakar ?","r",1,YN],
 ["Si vous êtes à Dakar, indiquez votre quartier","t",0]]],
@@ -1463,39 +1464,43 @@ const S=[
 ["Centre d’obtention du Baccalauréat","t",1,0,"Exemple : Lycée Samba Dione de Gandiaye"],["Établissement d’origine","t",0,0,"Nom du lycée fréquenté avant l’obtention du Baccalauréat."]]],
 ["SECTION 4 — Orientation universitaire",[
 ["Université / établissement d’enseignement supérieur","s",1,["UCAD","Université ou établissement privé"]],["Nom de l’université ou de l’établissement","t",1,0,0,["Université / établissement d’enseignement supérieur","Université ou établissement privé"]],
-["Faculté / UFR / École / Institut","s",1,["Faculté des Sciences Juridiques et Politiques (FSJP)", "Faculté des Sciences Économiques et de Gestion (FASEG)", "Faculté des Lettres et Sciences Humaines (FLSH)", "Faculté des Sciences et Techniques (FST)", "Faculté de Médecine, de Pharmacie et d’Odontologie (FMPO)", "Faculté des Sciences et Technologies de l’Éducation et de la Formation (FASTEF)", "École Supérieure Polytechnique (ESP)", "École des Bibliothécaires, Archivistes et Documentalistes (EBAD)", "Centre d’Études des Sciences et Techniques de l’Information (CESTI)", "École Normale Supérieure d’Enseignement Technique et Professionnel (ENSETP)", "Institut National Supérieur de l’Éducation Populaire et du Sport (INSEPS)", "École Nationale Supérieure des Mines et de la Géologie (ENSMG, ex-IST)", "École Supérieure d’Économie Appliquée (ESEA)", "École Nationale de Développement Sanitaire et Social (ENDSS)", "École Nationale de la Statistique et de l’Analyse Économique (ENSAE)", "École Nationale de Formation en Économie Familiale et Sociale (ENFEFS)", "École Nationale des Travailleurs Sociaux Spécialisés (ENTSS)", "École Nationale Supérieure d’Agriculture (ENSA)", "Centre de Formation Judiciaire (CFJ)", "Autres"]],["Précisez votre faculté, école ou institut","t",1,0,0,["Faculté / UFR / École / Institut","Autres"]],["Niveau d’études","r",1,["Licence 1 / Première année","Classe préparatoire","BTS / DUT","Autre"]]]],
+["Faculté / UFR / École / Institut","s",1,["Faculté des Sciences Juridiques et Politiques (FSJP)", "Faculté des Sciences Économiques et de Gestion (FASEG)", "Faculté des Lettres et Sciences Humaines (FLSH)", "Faculté des Sciences et Techniques (FST)", "Faculté de Médecine, de Pharmacie et d’Odontologie (FMPO)", "Faculté des Sciences et Technologies de l’Éducation et de la Formation (FASTEF)", "École Supérieure Polytechnique (ESP)", "École des Bibliothécaires, Archivistes et Documentalistes (EBAD)", "Centre d’Études des Sciences et Techniques de l’Information (CESTI)", "École Normale Supérieure d’Enseignement Technique et Professionnel (ENSETP)", "Institut National Supérieur de l’Éducation Populaire et du Sport (INSEPS)", "École Nationale Supérieure des Mines et de la Géologie (ENSMG, ex-IST)", "École Supérieure d’Économie Appliquée (ESEA)", "École Nationale de Développement Sanitaire et Social (ENDSS)", "École Nationale de la Statistique et de l’Analyse Économique (ENSAE)", "École Nationale de Formation en Économie Familiale et Sociale (ENFEFS)", "École Nationale des Travailleurs Sociaux Spécialisés (ENTSS)", "École Nationale Supérieure d’Agriculture (ENSA)", "Centre de Formation Judiciaire (CFJ)", "Institut des Politiques Publiques (IPP)", "Autres"]],["Précisez votre faculté, école ou institut","t",1,0,0,["Faculté / UFR / École / Institut","Autres"]],["Niveau d’études","r",1,["Licence 1 / Première année","Classe préparatoire","BTS / DUT","Autre"]]]],
 ["SECTION 5 — Besoins et accompagnement",[
-["As-tu besoin d’un accompagnement pour ton inscription ?","r",1,YN],["As-tu besoin d’un accompagnement pour trouver un logement ?","r",1,["Oui","Non","J’ai déjà un logement"]],
-["As-tu besoin d’une aide pour comprendre les démarches universitaires ?","r",1,YN],["As-tu besoin d’une orientation concernant le choix de ta filière ?","r",1,["Oui","Non","Je ne sais pas encore"]],
-["As-tu des difficultés particulières que l’AMEERGA pourrait prendre en compte ?","p",0]]],
+["Pour quoi as-tu besoin d’un accompagnement ?","c",1,["Mon inscription à l’université","Trouver un logement à Dakar","Comprendre les démarches universitaires","Choisir ma filière","Je n’ai besoin d’aucun accompagnement pour l’instant"],"Coche toutes les réponses qui te concernent."],
+["As-tu une situation particulière que l’AMEERGA devrait prendre en compte ?","c",0,["J’ai un handicap","J’ai une maladie chronique","Je suis orphelin(e)","J’ai des difficultés financières","Je n’ai pas de famille ni de tuteur à Dakar","Autre situation"],"Facultatif et confidentiel. Coche ce qui te concerne."],
+["Précisions sur ta situation","p",0,0,"Facultatif : ajoute ce qui peut aider l’AMEERGA à mieux t’accompagner."]]],
 ["SECTION 6 — Engagement et contact",[
-["Souhaites-tu intégrer le réseau des nouveaux bacheliers de l’AMEERGA ?","r",1,YN],["Souhaites-tu être ajouté(e) au groupe WhatsApp des nouveaux bacheliers ?","r",1,YN],
+["Souhaites-tu intégrer le réseau des nouveaux bacheliers de l’AMEERGA et son groupe WhatsApp ?","r",1,YN],
 ["Comment as-tu connu ce recensement ?","r",0,["Groupe WhatsApp AMEERGA","Facebook","TikTok","Instagram","Un membre de l’AMEERGA","Un ami / camarade","Autre"]]]],
 ["SECTION 7 — Consentement",[
-["Autorisation d’utilisation des données","c",1,["Je certifie que les informations fournies sont exactes et j’autorise l’AMEERGA à utiliser ces informations dans le cadre du recensement, de l’orientation, du suivi et de l’accompagnement des nouveaux bacheliers."]]]]
+["Autorisation d’utilisation des données","c",1,["Je certifie que les informations fournies sont exactes et j’autorise l’AMEERGA à utiliser ces informations dans le cadre du recensement, de l’orientation, du suivi et de l’accompagnement des nouveaux bacheliers."],0,0,1]]]
 ];
 
-const f=document.getElementById("f");let n=0;const Q=[];
+const f=document.getElementById("f");let n=0,u=0;const Q=[];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 S.forEach(([title,qs])=>{
  const m=title.match(/^SECTION (\d+) — (.*)$/);
  const h=document.createElement("h2");h.className="fsec";h.innerHTML=m?`Section ${m[1]} sur ${S.length}<b>${esc(m[2])}</b>`:esc(title);f.appendChild(h);
- qs.forEach(([lab,t,req,opts,hint,cond])=>{
-  n++;const id="q"+n;Q.push({id,lab,t,req,opts,cond});
+ qs.forEach(([lab,t,req,opts,hint,cond,nonum])=>{
+  if(!nonum)n++;const id="q"+(++u);Q.push({id,lab,t,req,opts,cond});
   let inp="";
-  if(t=="t"||t=="tel"||t=="d")inp=`<input id="${id}" type="${t=="t"?"text":t}" name="${id}" ${t=="tel"?'inputmode="tel" autocomplete="tel"':""}>`;
+  if(t=="dmy"){const M=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],Y=[];for(let y=2012;y>=1990;y--)Y.push(y);
+   const sel=(suf,lab,vals,txt)=>`<select id="${id}_${suf}" name="${id}_${suf}" aria-label="${lab}"><option value="">${lab}</option>${vals.map((v,i)=>`<option value="${v}">${txt?txt[i]:v}</option>`).join("")}</select>`;
+   inp=`<div class="dmy">${sel("d","Jour",Array.from({length:31},(_,i)=>i+1))}${sel("m","Mois",M.map((_,i)=>i+1),M)}${sel("y","Année",Y)}</div>`}
+  else if(t=="t"||t=="tel"||t=="d")inp=`<input id="${id}" type="${t=="t"?"text":t}" name="${id}" ${t=="tel"?'inputmode="tel" autocomplete="tel"':""}>`;
   else if(t=="p")inp=`<textarea id="${id}" name="${id}"></textarea>`;
   else if(t=="s")inp=`<select id="${id}" name="${id}"><option value="">Choisir</option>${opts.map(o=>`<option>${esc(o)}</option>`).join("")}</select>`;
   else inp=opts.map((o,k)=>`<label class="o"><input id="${id}_${k}" type="${t=="r"?"radio":"checkbox"}" name="${id}" value="${esc(o)}"><span>${esc(o)}</span></label>`).join("");
-  const grp=t=="r"||t=="c";
+  const grp=t=="r"||t=="c"||t=="dmy";
   const c=document.createElement("div");c.className="fcard";c.id="c"+id;if(cond)c.hidden=true;
   if(grp){c.setAttribute("role","group");c.setAttribute("aria-labelledby","l"+id)}
-  c.innerHTML=`<${grp?"span":"label"} class="fq" id="l${id}"${grp?"":` for="${id}"`}>${n}. ${esc(lab)}${req?' <span class="req" aria-label="obligatoire">*</span>':""}${hint?`<span class="hint">${esc(hint)}</span>`:""}</${grp?"span":"label"}>${inp}<div class="em">Cette question est obligatoire.</div>`;
+  c.innerHTML=`<${grp?"span":"label"} class="fq" id="l${id}"${grp?"":` for="${id}"`}>${nonum?"":n+". "}${esc(lab)}${req?' <span class="req" aria-label="obligatoire">*</span>':""}${hint?`<span class="hint">${esc(hint)}</span>`:""}</${grp?"span":"label"}>${inp}<div class="em">Cette question est obligatoire.</div>`;
   f.appendChild(c);
  });
 });
 const b=document.createElement("button");b.type="submit";b.className="btn pri send";b.textContent="Valider mes réponses";f.appendChild(b);
-const val=q=>{const el=f.elements[q.id];const els=el.length!==undefined&&el.tagName!=="SELECT"?[...el]:[el];
+const val=q=>{if(q.t=="dmy"){const g=s=>f.elements[q.id+"_"+s].value,d=g("d"),m=g("m"),y=g("y");return d&&m&&y?String(d).padStart(2,"0")+"/"+String(m).padStart(2,"0")+"/"+y:""}
+ const el=f.elements[q.id];const els=el.length!==undefined&&el.tagName!=="SELECT"?[...el]:[el];
  if(q.t=="r"||q.t=="c")return els.filter(e=>e.checked).map(e=>e.value).join(" | ");return els[0].value.trim()};
 const vis=q=>!q.cond||val(Q.find(x=>x.lab==q.cond[0]))==q.cond[1];
 function upd(){Q.forEach(q=>{if(q.cond)document.getElementById("c"+q.id).hidden=!vis(q)})}
