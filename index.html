@@ -671,12 +671,13 @@ nav.main a.cur{background:linear-gradient(160deg,var(--sheen),transparent 70%),c
 window.REV=(()=>{
 const D={},K="ameerga-rev";
 const S={fr:["Français","Fr"],hist:["Histoire","Hi"],geo:["Géographie","Gé"],philo:["Philosophie","Ph"],maths:["Mathématiques","Ma"],pc:["Physique-Chimie","PC"],svt:["SVT","SV"],ang:["Anglais","En"]};
-const L={sec:{n:"Seconde",s:["fr","hist","geo","maths","pc","svt","ang"]},pre:{n:"Première",s:["fr","hist","geo","maths","pc","svt","ang"]},tl:{n:"Terminale L",s:["fr","philo","hist","geo","ang"]},ts:{n:"Terminale S",s:["maths","pc","svt","fr","philo","hist","geo","ang"]}};
-const PROG={pre:{hist:["La révolution industrielle : genèse, formes et manifestations","Conséquences économiques, politiques, sociales et culturelles de la révolution industrielle","Syndicalisme et socialisme","L’impérialisme en Afrique : causes, doctrines et méthodes","Les positions européennes en Afrique en 1870","La conférence de Berlin (1884-1885)","Les positions européennes en Afrique en 1914","Les formes de résistance à l’impérialisme européen","La Première Guerre mondiale et ses conséquences","L’Afrique dans la Première Guerre mondiale","La Seconde Guerre mondiale : les principales étapes","L’Afrique dans la Seconde Guerre mondiale"]}};
+const L={sl:{n:"Seconde L",s:["fr","hist","geo","ang"]},ss:{n:"Seconde S",s:["maths","pc","svt","fr","hist","geo","ang"]},pl:{n:"Première L",s:["fr","hist","geo","ang"]},ps:{n:"Première S",s:["maths","pc","svt","fr","hist","geo","ang"]},tl:{n:"Terminale L",s:["fr","philo","hist","geo","ang"]},ts:{n:"Terminale S",s:["maths","pc","svt","fr","philo","hist","geo","ang"]}};
+const G={sec:{n:"Seconde",l:"sl",s:"ss"},pre:{n:"Première",l:"pl",s:"ps"},tle:{n:"Terminale",l:"tl",s:"ts"}};
+const PROG={pl:{hist:["La révolution industrielle : genèse, formes et manifestations","Conséquences économiques, politiques, sociales et culturelles de la révolution industrielle","Syndicalisme et socialisme","L’impérialisme en Afrique : causes, doctrines et méthodes","Les positions européennes en Afrique en 1870","La conférence de Berlin (1884-1885)","Les positions européennes en Afrique en 1914","Les formes de résistance à l’impérialisme européen","La Première Guerre mondiale et ses conséquences","L’Afrique dans la Première Guerre mondiale","La Seconde Guerre mondiale : les principales étapes","L’Afrique dans la Seconde Guerre mondiale"]}};
 const WA="https://wa.me/221761797618?text=";
 let st={done:{},best:{},lvl:"tle"};
 try{const s=JSON.parse(localStorage.getItem(K)||"null");if(s&&typeof s==="object")st=Object.assign(st,s)}catch(e){}
-if(!L[st.lvl])st.lvl="tle";
+if(!L[st.lvl]&&!G[st.lvl])st.lvl="tle";
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}};
 const add=(lv,sb,a)=>{(D[lv]=D[lv]||{})[sb]=a};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -693,26 +694,28 @@ const methFor=sb=>({fr:"dissertation",hist:"dissertation-hg",geo:"commentaire-hg
 let Q=null,F=null;
 
 /* ---------- ACCUEIL DE LA RUBRIQUE ---------- */
-function segBar(lv){const T=lv==="tl"||lv==="ts"||lv==="tle";
- const tabs=[["sec","Seconde"],["pre","Première"],["tle","Terminale"]].map(([k,n])=>{const on=k==="tle"?T:k===lv;return `<a class="rx-seg${on?" on":""}" href="${H(k)}" ${on?'aria-current="true"':""}>${n}</a>`}).join("");
- const ser=(lv==="tl"||lv==="ts")?`<div class="rx-serie" role="navigation" aria-label="Choisir ta série"><span>Série</span>${["tl","ts"].map(k=>`<a class="${k===lv?"on":""}" href="${H(k)}" ${k===lv?'aria-current="true"':""}>${k==="tl"?"L":"S"}</a>`).join("")}</div>`:"";
+const grp=lv=>G[lv]?lv:Object.keys(G).find(g=>G[g].l===lv||G[g].s===lv);
+PROG.ps=PROG.pl;
+function segBar(lv){const g=grp(lv);
+ const tabs=Object.keys(G).map(k=>{const on=k===g;return `<a class="rx-seg${on?" on":""}" href="${H(k)}" ${on?'aria-current="true"':""}>${G[k].n}</a>`}).join("");
+ const ser=L[lv]?`<div class="rx-serie" role="navigation" aria-label="Choisir ta série"><span>Série</span>${[G[g].l,G[g].s].map(k=>`<a class="${k===lv?"on":""}" href="${H(k)}" ${k===lv?'aria-current="true"':""}>${k[1].toUpperCase()}</a>`).join("")}</div>`:"";
  return `<div class="rx-segs" role="navigation" aria-label="Choisir ta classe">${tabs}</div>${ser}`;
 }
 function hubHead(){return bc([["Révisions"]])+`
 <h2 class="in">Révisions des cours</h2>
-<p class="lead">Choisis ta classe, puis ta matière. Chaque fiche contient l’essentiel du cours, des flashcards, un quiz corrigé et la méthode adaptée.</p>
+<p class="lead">Choisis ta classe et ta série, puis ta matière. Chaque fiche contient l’essentiel du cours, des flashcards, un quiz corrigé et la méthode adaptée.</p>
 <div class="rx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="rxq" placeholder="Chercher une notion, une date, un auteur…" aria-label="Rechercher dans les révisions" autocomplete="off"></div>
 <div id="rxres" aria-live="polite"></div>`}
 function hubFoot(){return `<div class="rx-contrib"><div><b>Tu es étudiant ou enseignant ?</b><p>Aide les plus jeunes : propose une fiche, un sujet corrigé ou signale une erreur.</p></div><a class="btn sec" href="${WA+encodeURIComponent("Bonjour AMEERGA, je souhaite proposer une fiche de révision ou signaler une erreur dans la rubrique Révisions : ")}" target="_blank" rel="noopener">Écrire à l’AMEERGA</a></div>
 <p class="rx-note">Ta progression est enregistrée sur cet appareil uniquement.</p>`}
-function choice(){if(st.lvl!=="tle"){st.lvl="tle";save()}
- const card=k=>{const a=allCh(k),d=a.filter(x=>st.done[x.c.id]).length;return `<a class="rx-lvl" href="${H(k)}"><b>${L[k].n}</b><small>${L[k].s.map(s=>S[s][0]).join(" · ")}</small><span>${a.length} fiches · ${d} révisée${d>1?"s":""} →</span></a>`};
- return hubHead()+segBar("tle")+`<h3 class="rx-h">Quelle est ta série ?</h3><div class="rx-lvls">${card("tl")}${card("ts")}</div>`+hubFoot();
+function choice(g){if(st.lvl!==g){st.lvl=g;save()}
+ const card=k=>{const a=allCh(k),d=a.filter(x=>st.done[x.c.id]).length;return `<a class="rx-lvl" href="${H(k)}"><b>${L[k].n}</b><small>${L[k].s.map(s=>S[s][0]).join(" · ")}</small><span>${a.length?`${a.length} fiches · ${d} révisée${d>1?"s":""} →`:"Fiches en préparation →"}</span></a>`};
+ return hubHead()+segBar(g)+`<h3 class="rx-h">Quelle est ta série ?</h3><div class="rx-lvls">${card(G[g].l)}${card(G[g].s)}</div>`+hubFoot();
 }
 function hub(lv){
- if(lv==="tle")return choice();
- if(!L[lv]){if(!L[st.lvl])return choice();lv=st.lvl}
- if(st.lvl!==lv){st.lvl=lv;save()}
+ if(G[lv])return choice(lv);
+ if(!L[lv]){if(!L[st.lvl])return choice(G[st.lvl]?st.lvl:"tle");lv=st.lvl}
+ if(st.lvl!==lv||st.ser!==lv[1]){st.lvl=lv;st.ser=lv[1];save()}
  const cards=L[lv].s.map(sb=>{const c=chs(lv,sb),n=c.length,d=c.filter(x=>st.done[x.id]).length,pg=(PROG[lv]||{})[sb];
   const meta=n?`${n} fiches · ${d} révisée${d>1?"s":""}`:(pg?"Programme disponible":"Bientôt");
   return `<a class="rx-sub${n?"":" soon"}" href="${H(lv+"/"+sb)}"><span class="rx-ico" aria-hidden="true">${S[sb][1]}</span><b>${S[sb][0]}</b><small>${meta}</small>${n?`<span class="rx-pg" aria-hidden="true"><i style="width:${pct(d,n)}%"></i></span>`:""}</a>`}).join("");
@@ -724,8 +727,8 @@ function hub(lv){
 /* ---------- RECHERCHE ---------- */
 let IDX=null;
 function index(){IDX=[];
- Object.keys(L).forEach(lv=>L[lv].s.filter(sb=>D[lv]&&D[lv][sb]&&!(lv==="tl"&&L.ts.s.includes(sb))).forEach(sb=>D[lv][sb].forEach(c=>{
-  IDX.push({h:H(lv+"/"+sb+"/"+c.id),t:c.t,k:`${lv==="ts"&&L.tl.s.includes(sb)?"Terminale L et S":L[lv].n} · ${S[sb][0]} · ${c.l}`,n:norm([c.t,c.res,c.pts.map(p=>p.join(" ")).join(" "),(c.dates||[]).map(d=>d.join(" ")).join(" "),(c.mots||[]).map(m=>m.join(" ")).join(" ")].join(" ")),c})})));
+ Object.keys(L).forEach(lv=>L[lv].s.filter(sb=>D[lv]&&D[lv][sb]&&!(lv[1]==="l"&&L[lv[0]+"s"].s.includes(sb))).forEach(sb=>D[lv][sb].forEach(c=>{
+  IDX.push({h:H(lv+"/"+sb+"/"+c.id),t:c.t,k:`${lv[1]==="s"&&L[lv[0]+"l"].s.includes(sb)?L[lv].n.replace(/ S$/," L et S"):L[lv].n} · ${S[sb][0]} · ${c.l}`,n:norm([c.t,c.res,c.pts.map(p=>p.join(" ")).join(" "),(c.dates||[]).map(d=>d.join(" ")).join(" "),(c.mots||[]).map(m=>m.join(" ")).join(" ")].join(" ")),c})})));
  (REV.meth||[]).forEach(m=>IDX.push({h:H("methodes/"+m.id),t:m.t,k:"Méthode · "+m.mat,n:norm([m.t,m.intro,m.steps.map(s=>s.join(" ")).join(" ")].join(" "))}));
 }
 function search(q){const r=document.getElementById("rxres");if(!r)return;const w=norm(q).split(" ").filter(x=>x.length>1);
@@ -825,10 +828,10 @@ ${m.ex.length?`<h3 class="rx-h" id="rx-exemple">Exemple corrigé</h3><div class=
 }
 
 /* ---------- ROUTEUR ---------- */
-function render(parts){const b=box();if(!b)return;Q=null;F=null;parts=(parts||[]).filter(Boolean);if(parts[0]==="tle"&&parts.length>1)parts[0]=L[st.lvl]&&st.lvl[0]==="t"?st.lvl:"ts";
+function render(parts){const b=box();if(!b)return;Q=null;F=null;parts=(parts||[]).filter(Boolean);if(G[parts[0]]&&parts.length>1)parts[0]=G[parts[0]][st.ser==="l"?"l":"s"];
  let h;
  if(parts[0]==="methodes")h=parts[1]?method(parts[1]):methods();
- else if(!parts.length||(parts.length===1&&L[parts[0]]))h=hub(parts[0]||st.lvl);
+ else if(!parts.length||(parts.length===1&&(L[parts[0]]||G[parts[0]])))h=hub(parts[0]||st.lvl);
  else if(parts.length===2)h=subject(parts[0],parts[1]);
  else if(parts[2]==="melange")h=mixed(parts[0],parts[1]);
  else h=chapter(parts[0],parts[1],parts[2],parts[3]);
@@ -2110,7 +2113,7 @@ C("ph14","Physique nucléaire · Chapitre 14","Radioactivité et décroissance r
 ]);
 
 /* Terminale L et Terminale S partagent les matières communes */
-D.tl=D.tle; D.ts=D.tle;
+D.tl=D.tle; D.ts=D.tle; D.sec=D.sec||{}; D.sl=D.sec; D.ss=D.sec; D.pre=D.pre||{}; D.pl=D.pre; D.ps=D.pre;
 })();
 
 </script>
