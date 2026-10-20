@@ -258,6 +258,16 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding-block:
 .rx-hits a:hover{border-color:var(--green)}.rx-hits small{color:var(--muted);font-size:13px}.rx-hits em{color:var(--muted);font-size:14px;font-style:normal}
 .rx-segs{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:999px;margin:16px 0 4px;background:var(--sunk);max-width:100%;overflow-x:auto}
 .rx-seg{padding:9px 18px;border-radius:999px;text-decoration:none;font-weight:700;font-size:15px;color:var(--muted);white-space:nowrap}
+.rx-serie{display:flex;align-items:center;gap:6px;margin:10px 0 0;font-size:14px;color:var(--muted);font-weight:700}
+.rx-serie a{min-width:44px;text-align:center;padding:7px 14px;border-radius:999px;border:1px solid var(--edge);background:var(--glass);text-decoration:none;color:var(--ink)}
+.rx-serie a.on{background:var(--green);color:var(--on-green);border-color:transparent}
+.rx-lvls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.rx-lvl{display:grid;gap:6px;padding:24px;border-radius:var(--r);text-decoration:none;border:1px solid var(--edge);background:radial-gradient(240px circle at var(--mx,30%) var(--my,-40%),var(--sheen),transparent 70%),linear-gradient(155deg,var(--sheen2),transparent 45%),var(--glass);box-shadow:inset 0 1px 0 var(--edge),var(--drop);transition:transform .4s cubic-bezier(.16,1,.3,1),border-color .3s}
+.rx-lvl:hover{transform:translateY(-3px);border-color:var(--green)}
+.rx-lvl b{font:800 28px/1.1 var(--display)}
+.rx-lvl small{color:var(--muted);font-size:14px}
+.rx-lvl span{color:var(--green-ink);font-weight:700;font-size:15px;margin-top:6px}
+@media (max-width:600px){.rx-lvls{grid-template-columns:minmax(0,1fr)}}
 .rx-seg.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .rx-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0 0}
 .rx-stats div{border:1px solid var(--line);border-radius:var(--r);padding:16px 12px;background:var(--surface);text-align:center}
@@ -430,7 +440,6 @@ nav.main a.cur{background:linear-gradient(160deg,var(--sheen),transparent 70%),c
  .cta .btn{flex:1 1 100%}
  .route{padding:20px}
  .fab span{display:none}.fab{padding:14px}
- .rx-segs{display:grid;grid-template-columns:1fr 1fr;border-radius:18px;width:100%}.rx-seg{text-align:center;border-radius:14px}
  .rx-stats b{font-size:26px}
  .rx-subs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
  .rx-sub{grid-template-columns:minmax(0,1fr)}.rx-ico{grid-row:auto;margin-bottom:8px}
@@ -665,9 +674,9 @@ const S={fr:["Français","Fr"],hist:["Histoire","Hi"],geo:["Géographie","Gé"],
 const L={sec:{n:"Seconde",s:["fr","hist","geo","maths","pc","svt","ang"]},pre:{n:"Première",s:["fr","hist","geo","maths","pc","svt","ang"]},tl:{n:"Terminale L",s:["fr","philo","hist","geo","ang"]},ts:{n:"Terminale S",s:["maths","pc","svt","fr","philo","hist","geo","ang"]}};
 const PROG={pre:{hist:["La révolution industrielle : genèse, formes et manifestations","Conséquences économiques, politiques, sociales et culturelles de la révolution industrielle","Syndicalisme et socialisme","L’impérialisme en Afrique : causes, doctrines et méthodes","Les positions européennes en Afrique en 1870","La conférence de Berlin (1884-1885)","Les positions européennes en Afrique en 1914","Les formes de résistance à l’impérialisme européen","La Première Guerre mondiale et ses conséquences","L’Afrique dans la Première Guerre mondiale","La Seconde Guerre mondiale : les principales étapes","L’Afrique dans la Seconde Guerre mondiale"]}};
 const WA="https://wa.me/221761797618?text=";
-let st={done:{},best:{},lvl:"ts"};
+let st={done:{},best:{},lvl:"tle"};
 try{const s=JSON.parse(localStorage.getItem(K)||"null");if(s&&typeof s==="object")st=Object.assign(st,s)}catch(e){}
-if(!L[st.lvl])st.lvl="ts";
+if(!L[st.lvl])st.lvl="tle";
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}};
 const add=(lv,sb,a)=>{(D[lv]=D[lv]||{})[sb]=a};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -684,32 +693,32 @@ const methFor=sb=>({fr:"dissertation",hist:"dissertation-hg",geo:"commentaire-hg
 let Q=null,F=null;
 
 /* ---------- ACCUEIL DE LA RUBRIQUE ---------- */
+function segBar(lv){const T=lv==="tl"||lv==="ts"||lv==="tle";
+ const tabs=[["sec","Seconde"],["pre","Première"],["tle","Terminale"]].map(([k,n])=>{const on=k==="tle"?T:k===lv;return `<a class="rx-seg${on?" on":""}" href="${H(k)}" ${on?'aria-current="true"':""}>${n}</a>`}).join("");
+ const ser=(lv==="tl"||lv==="ts")?`<div class="rx-serie" role="navigation" aria-label="Choisir ta série"><span>Série</span>${["tl","ts"].map(k=>`<a class="${k===lv?"on":""}" href="${H(k)}" ${k===lv?'aria-current="true"':""}>${k==="tl"?"L":"S"}</a>`).join("")}</div>`:"";
+ return `<div class="rx-segs" role="navigation" aria-label="Choisir ta classe">${tabs}</div>${ser}`;
+}
+function hubHead(){return bc([["Révisions"]])+`
+<h2 class="in">Révisions des cours</h2>
+<p class="lead">Choisis ta classe, puis ta matière. Chaque fiche contient l’essentiel du cours, des flashcards, un quiz corrigé et la méthode adaptée.</p>
+<div class="rx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="rxq" placeholder="Chercher une notion, une date, un auteur…" aria-label="Rechercher dans les révisions" autocomplete="off"></div>
+<div id="rxres" aria-live="polite"></div>`}
+function hubFoot(){return `<div class="rx-contrib"><div><b>Tu es étudiant ou enseignant ?</b><p>Aide les plus jeunes : propose une fiche, un sujet corrigé ou signale une erreur.</p></div><a class="btn sec" href="${WA+encodeURIComponent("Bonjour AMEERGA, je souhaite proposer une fiche de révision ou signaler une erreur dans la rubrique Révisions : ")}" target="_blank" rel="noopener">Écrire à l’AMEERGA</a></div>
+<p class="rx-note">Ta progression est enregistrée sur cet appareil uniquement.</p>`}
+function choice(){if(st.lvl!=="tle"){st.lvl="tle";save()}
+ const card=k=>{const a=allCh(k),d=a.filter(x=>st.done[x.c.id]).length;return `<a class="rx-lvl" href="${H(k)}"><b>${L[k].n}</b><small>${L[k].s.map(s=>S[s][0]).join(" · ")}</small><span>${a.length} fiches · ${d} révisée${d>1?"s":""} →</span></a>`};
+ return hubHead()+segBar("tle")+`<h3 class="rx-h">Quelle est ta série ?</h3><div class="rx-lvls">${card("tl")}${card("ts")}</div>`+hubFoot();
+}
 function hub(lv){
- if(!L[lv])lv=L[st.lvl]?st.lvl:"ts";
+ if(lv==="tle")return choice();
+ if(!L[lv]){if(!L[st.lvl])return choice();lv=st.lvl}
  if(st.lvl!==lv){st.lvl=lv;save()}
- const lvTabs=Object.keys(L).map(k=>`<a class="rx-seg${k===lv?" on":""}" href="${H(k)}" ${k===lv?'aria-current="true"':""}>${L[k].n}</a>`).join("");
  const cards=L[lv].s.map(sb=>{const c=chs(lv,sb),n=c.length,d=c.filter(x=>st.done[x.id]).length,pg=(PROG[lv]||{})[sb];
   const meta=n?`${n} fiches · ${d} révisée${d>1?"s":""}`:(pg?"Programme disponible":"Bientôt");
   return `<a class="rx-sub${n?"":" soon"}" href="${H(lv+"/"+sb)}"><span class="rx-ico" aria-hidden="true">${S[sb][1]}</span><b>${S[sb][0]}</b><small>${meta}</small>${n?`<span class="rx-pg" aria-hidden="true"><i style="width:${pct(d,n)}%"></i></span>`:""}</a>`}).join("");
- const all=allCh(lv),dn=all.filter(x=>st.done[x.c.id]).length,bs=all.map(x=>st.best[x.c.id]).filter(v=>v!=null),avg=bs.length?Math.round(bs.reduce((a,b)=>a+b,0)/bs.length*100):null;
- const stats=all.length?`<div class="rx-stats"><div><b>${dn}<small>/${all.length}</small></b><span>fiches révisées</span></div><div><b>${bs.length}</b><span>quiz réalisés</span></div><div><b>${avg==null?"–":avg+"%"}</b><span>score moyen</span></div></div>`:"";
- const meths=(REV.meth||[]).map(m=>`<a class="rx-meth" href="${H("methodes/"+m.id)}"><b>${esc(m.t)}</b><small>${esc(m.mat)}</small></a>`).join("");
- return bc([["Révisions"]])+`
-<h2 class="in">Révisions des cours</h2>
-<p class="lead">Fiches mémo, flashcards, quiz corrigés et méthodes avec exemples, pour réviser du lycée jusqu’au bac. Les contenus de Terminale suivent le programme officiel de l’Office du Bac.</p>
-<div class="rx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="rxq" placeholder="Chercher une notion, une date, un auteur…" aria-label="Rechercher dans les révisions" autocomplete="off"></div>
-<div id="rxres" aria-live="polite"></div>
-<div class="rx-segs" role="navigation" aria-label="Choisir ta classe">${lvTabs}</div>
-${stats}
-<h3 class="rx-h">Les matières en ${L[lv].n}</h3>
-<div class="rx-subs">${cards}</div>
-<h3 class="rx-h">Les méthodes</h3>
-<p class="rx-mut">Valables de la Seconde à la Terminale, avec des exemples rédigés.</p>
-<div class="rx-meths">${meths}</div>
-<h3 class="rx-h">Comment réviser avec cette rubrique</h3>
-<ol class="steps rx-how"><li><h3>Lis la fiche</h3><p>L’essentiel, les dates et les notions du chapitre.</p></li><li><h3>Fais les flashcards</h3><p>Retourne les cartes et note ce que tu sais.</p></li><li><h3>Passe le quiz</h3><p>Chaque réponse est corrigée et expliquée.</p></li><li><h3>Entraîne-toi</h3><p>Traite un sujet avec la méthode adaptée.</p></li></ol>
-<div class="rx-contrib"><div><b>Tu es étudiant ou enseignant ?</b><p>Aide les plus jeunes : propose une fiche, un sujet corrigé ou signale une erreur.</p></div><a class="btn sec" href="${WA+encodeURIComponent("Bonjour AMEERGA, je souhaite proposer une fiche de révision ou signaler une erreur dans la rubrique Révisions : ")}" target="_blank" rel="noopener">Écrire à l’AMEERGA</a></div>
-<p class="rx-note">Ta progression est enregistrée sur cet appareil uniquement.</p>`;
+ const all=allCh(lv),dn=all.filter(x=>st.done[x.c.id]).length;
+ const prog=all.length?`<div class="rx-sbar"><div class="rx-pg big"><i style="width:${pct(dn,all.length)}%"></i></div><span>${dn} / ${all.length} fiches révisées</span></div>`:"";
+ return hubHead()+segBar(lv)+`<h3 class="rx-h">Les matières en ${L[lv].n}</h3>${prog}<div class="rx-subs">${cards}</div>`+hubFoot();
 }
 
 /* ---------- RECHERCHE ---------- */
@@ -816,7 +825,7 @@ ${m.ex.length?`<h3 class="rx-h" id="rx-exemple">Exemple corrigé</h3><div class=
 }
 
 /* ---------- ROUTEUR ---------- */
-function render(parts){const b=box();if(!b)return;Q=null;F=null;parts=(parts||[]).filter(Boolean);if(parts[0]==="tle")parts[0]=st.lvl;
+function render(parts){const b=box();if(!b)return;Q=null;F=null;parts=(parts||[]).filter(Boolean);if(parts[0]==="tle"&&parts.length>1)parts[0]=L[st.lvl]&&st.lvl[0]==="t"?st.lvl:"ts";
  let h;
  if(parts[0]==="methodes")h=parts[1]?method(parts[1]):methods();
  else if(!parts.length||(parts.length===1&&L[parts[0]]))h=hub(parts[0]||st.lvl);
