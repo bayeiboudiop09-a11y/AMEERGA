@@ -310,7 +310,7 @@ footer{background:var(--surface);border-top:1px solid var(--line);padding-block:
 .rx-mots div{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
 .rx-mots dt{font-weight:700}.rx-mots dd{margin:2px 0 0;color:var(--muted)}
 .rx-act{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0}
-.rx-act .btn,.rx-row .btn{padding:12px 20px;font-size:15px}
+.rx-act .btn,.rx-row .btn{padding:12px 20px;font-size:15px;text-align:center}
 .rx-nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:32px}
 .rx-nav a{display:grid;gap:2px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r);text-decoration:none;font-weight:700;line-height:1.3;font-size:15px;background:var(--surface)}
 .rx-nav a:hover{border-color:var(--green)}.rx-nav small{font-weight:400;color:var(--green-ink)}.rx-nav .nx{text-align:right}
@@ -680,7 +680,7 @@ const chs=(lv,sb)=>(D[lv]&&D[lv][sb])||[];
 const allCh=lv=>(L[lv]?L[lv].s:Object.keys(D[lv]||{})).flatMap(sb=>chs(lv,sb).map(c=>({c,sb})));
 const bc=items=>'<nav class="rx-bc" aria-label="Fil d’Ariane">'+items.map((x,i)=>i<items.length-1?`<a href="${x[1]}">${esc(x[0])}</a><span aria-hidden="true">›</span>`:`<span aria-current="page">${esc(x[0])}</span>`).join("")+"</nav>";
 const pct=(a,b)=>b?Math.round(a/b*100):0;
-const methFor=sb=>sb==="fr"?"dissertation":"dissertation-hg";
+const methFor=sb=>({fr:"dissertation",hist:"dissertation-hg",geo:"commentaire-hg",philo:"philo-dissertation"})[sb]||null;
 let Q=null,F=null;
 
 /* ---------- ACCUEIL DE LA RUBRIQUE ---------- */
@@ -732,7 +732,7 @@ function subject(lv,sb){
  const c=chs(lv,sb),d=c.filter(x=>st.done[x.id]).length,pg=(PROG[lv]||{})[sb];
  let body;
  if(c.length){body=`<div class="rx-sbar"><div class="rx-pg big"><i style="width:${pct(d,c.length)}%"></i></div><span>${d} / ${c.length} fiches révisées</span></div>
-<div class="rx-row"><a class="btn pri" href="${H(lv+"/"+sb+"/melange")}">Quiz mélangé · 10 questions</a><a class="btn sec" href="${H("methodes/"+methFor(sb))}">Méthode de la dissertation</a></div>
+
 <ol class="rx-chs">`+c.map(x=>{const b=st.best[x.id];return `<li><a href="${H(lv+"/"+sb+"/"+x.id)}"><small>${esc(x.l)}</small><b>${esc(x.t)}</b><span class="rx-tags">${st.done[x.id]?'<span class="ok">✓ Révisée</span>':""}${b!=null?`<span>Quiz : ${Math.round(b*100)} %</span>`:""}</span></a></li>`}).join("")+"</ol>"}
  else{body=`<div class="rx-soon"><p><b>Les fiches de ${S[sb][0]} en ${L[lv].n} sont en préparation.</b></p>${pg?`<p>Voici les chapitres du programme, pour t’organiser dès maintenant :</p><ol>${pg.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`:""}${["fr","hist","geo"].includes(sb)?`<p>En attendant, les méthodes (dissertation, commentaire, résumé) sont les mêmes du lycée au bac :</p><p><a class="btn sec" href="${H("methodes")}">Voir les méthodes</a></p>`:""}<p>Tu veux aider à rédiger ces fiches ? <a href="${WA+encodeURIComponent("Bonjour AMEERGA, je souhaite contribuer aux fiches de "+S[sb][0]+" en "+L[lv].n+".")}" target="_blank" rel="noopener">Écris-nous sur WhatsApp</a>.</p></div>`}
  const src=(lv==="tl"||lv==="ts")&&c.length&&sb!=="philo"&&sb!=="pc"?`<p class="rx-note">Conforme au programme officiel de ${S[sb][0].toLowerCase()} de Terminale publié par l’Office du Bac.</p>`:"";
@@ -758,9 +758,9 @@ function fiche(x,lv,sb,base){
 ${x.pts.map(p=>`<section class="rx-pt"><h3>${p[0]}</h3>${p[1]}</section>`).join("")}
 ${x.dates&&x.dates.length?`<section class="rx-pt"><h3>Dates clés</h3><ul class="rx-dates">${x.dates.map(d=>`<li><b>${d[0]}</b><span>${d[1]}</span></li>`).join("")}</ul></section>`:""}
 ${x.mots&&x.mots.length?`<section class="rx-pt"><h3>Notions à connaître</h3><dl class="rx-mots">${x.mots.map(m=>`<div><dt>${m[0]}</dt><dd>${m[1]}</dd></div>`).join("")}</dl></section>`:""}
-${x.suj&&x.suj.length?`<section class="rx-pt"><h3>Sujets pour t’entraîner</h3><ul>${x.suj.map(s=>`<li>${s}</li>`).join("")}</ul><p><a href="${H("methodes/"+methFor(sb))}">Revoir la méthode →</a></p></section>`:""}
+${x.suj&&x.suj.length?`<section class="rx-pt"><h3>Sujets pour t’entraîner</h3><ul>${x.suj.map(s=>`<li>${s}</li>`).join("")}</ul>${methFor(sb)?`<p><a href="${H("methodes/"+methFor(sb))}">Revoir la méthode →</a></p>`:""}</section>`:""}
 </article>
-<div class="rx-act"><button type="button" class="btn ${done?"sec":"pri"}" data-act="done" data-id="${x.id}" aria-pressed="${done}">${done?"✓ Fiche révisée":"Marquer comme révisée"}</button><a class="btn sec" href="${base}.quiz">Passer au quiz →</a></div>`;
+<div class="rx-act"><button type="button" class="btn ${done?"sec":"pri"}" data-act="done" data-id="${x.id}" aria-pressed="${done}">${done?"✓ Fiche révisée":"Marquer comme révisée"}</button><a class="btn sec" href="${base}.quiz">Passer au quiz →</a>${methFor(sb)?`<a class="btn sec" href="${H("methodes/"+methFor(sb))}">Méthode : ${esc(((REV.meth||[]).find(m=>m.id===methFor(sb))||{}).t||"")}</a>`:""}<a class="btn sec" href="${H(lv+"/"+sb+"/melange")}">Quiz mélangé de la matière</a></div>`;
 }
 
 /* ---------- QUIZ ---------- */
@@ -2202,7 +2202,6 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-copy]");if
 (()=>{const u=document.getElementById("subj");if(!u||!window.REV||!REV.data)return;
  const T=REV.data().tle||{},S=["maths","pc","svt"],N={fr:"Français",philo:"Philosophie",hist:"Histoire",geo:"Géographie",maths:"Mathématiques",pc:"Physique-Chimie",svt:"SVT",ang:"Anglais"},me=REV.lvl&&REV.lvl()==="tl"?"tl":"ts";
  const rows=Object.keys(N).filter(sb=>T[sb]&&T[sb].length).map(sb=>{const s=S.includes(sb);return `<li><div><b>${N[sb]}</b><small>${s?"Terminale S":"Terminale L et S"} · fiches, flashcards et quiz</small></div><a class="n" href="#revisions.${s?"ts":me}.${sb}">${T[sb].length} fiches →</a></li>`});
- rows.push(`<li><div><b>Méthodes</b><small>Dissertation, commentaire, résumé, philosophie</small></div><a class="n" href="#revisions.methodes">${(REV.meth||[]).length} guides →</a></li>`);
  u.innerHTML=rows.join("");
 })();
 
