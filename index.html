@@ -186,6 +186,27 @@ h2{font-size:clamp(30px,4.2vw,46px);margin-bottom:14px}
 .team li.lead-role .av{background:var(--gold-soft);color:var(--gold-ink)}
 .team b{display:block;font-size:17px;line-height:1.3}
 .team small{color:var(--muted);font-size:14px}
+.bm{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;list-style:none;padding:0;margin:0}
+.bm li{display:flex;flex-direction:column;gap:10px;padding:10px 10px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);transition:transform .2s,box-shadow .2s}
+.bm li:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(27,107,61,.14)}
+.bm-ph{display:block;position:relative;width:100%;aspect-ratio:4/5;padding:0;border:0;border-radius:calc(var(--r) - 4px);overflow:hidden;background:#0d1d3a;cursor:zoom-in}
+.bm-ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+.bm-ph:hover img{transform:scale(1.03)}
+.bm-ph:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.bm-none{cursor:default;display:grid;place-items:center;background:linear-gradient(160deg,#13294b,#0b1730)}
+.bm-none span{font:700 54px var(--display);color:#d9b56a;letter-spacing:.04em}
+.bm li>div{padding:0 4px}
+.bm b{display:block;font-size:17px;line-height:1.3}
+.bm small{color:var(--muted);font-size:14px}
+.bm-ex{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.bm-ex li.lead-role{border-color:color-mix(in srgb,var(--gold) 45%,var(--line))}
+.bm-coms{display:flex;flex-wrap:wrap;gap:30px 22px}.bm-com{flex:0 0 auto}.bm-com .bm{grid-template-columns:repeat(var(--n),200px)}
+.bm-com h4{font:700 19px var(--display);margin:0 0 12px;color:var(--green-ink)}
+.bm-dlg{padding:0;border:0;border-radius:16px;max-width:min(92vw,560px);background:transparent;overflow:visible}
+.bm-dlg::backdrop{background:rgba(5,12,8,.82)}
+.bm-dlg img{display:block;width:100%;height:auto;max-height:88vh;object-fit:contain;border-radius:16px}
+.bm-x{position:absolute;top:-14px;right:-14px;width:44px;height:44px;border-radius:50%;border:0;background:var(--surface);color:var(--ink);font-size:26px;line-height:1;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+@media (max-width:520px){.bm,.bm-ex,.bm-com .bm{grid-template-columns:repeat(2,1fr);gap:10px}.bm-coms{gap:24px 10px}.bm-com{flex:1 1 100%}.bm-com[style="--n:1"]{flex:1 1 calc(50% - 5px);max-width:calc(50% - 5px)}.bm-com[style="--n:1"] .bm{grid-template-columns:1fr}.bm-com h4{font-size:16px}.bm-com[style="--n:1"] h4{min-height:2.6em}.bm li{padding:6px 6px 10px}.bm b{font-size:15px}.bm small{font-size:13px}.bm-none span{font-size:40px}.bm-x{top:8px;right:8px}}
 .team-h{font-size:14px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:36px 0 14px}
 .team-h:first-of-type{margin-top:0}
 
@@ -697,21 +718,44 @@ button.cg-cat{font:inherit;color:inherit;text-align:left;cursor:pointer;width:10
 </div></div>
 <section data-page="bureau"><div class="wrap">
  <h3 class="team-h">Bureau exécutif</h3>
- <ul class="team">
-  <li class="lead-role"><span class="av" aria-hidden="true">CD</span><div><b>Cheikh Ibrahima Diop</b><small>Président</small></div></li>
-  <li class="lead-role"><span class="av" aria-hidden="true">AS</span><div><b>Aliou Sarr</b><small>Vice-président</small></div></li>
-  <li class="lead-role"><span class="av" aria-hidden="true">AN</span><div><b>Amath Ndong</b><small>Secrétaire général</small></div></li>
-  <li class="lead-role"><span class="av" aria-hidden="true">WN</span><div><b>Waly Ndiaye</b><small>Trésorier</small></div></li>
+ <ul class="bm bm-ex">
+  <li class="lead-role"><button type="button" class="bm-ph" aria-label="Agrandir la photo de Cheikh Ibrahima Diop"><img src="photos/cheikh-ibrahima-diop.jpg" alt="Cheikh Ibrahima Diop, président" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Cheikh Ibrahima Diop</b><small>Président</small></div></li>
+  <li class="lead-role"><button type="button" class="bm-ph" aria-label="Agrandir la photo de Aliou Sarr"><img src="photos/aliou-sarr.jpg" alt="Aliou Sarr, vice-président" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Aliou Sarr</b><small>Vice-président</small></div></li>
+  <li class="lead-role"><button type="button" class="bm-ph" aria-label="Agrandir la photo de Amath Ndong"><img src="photos/amath-ndong.jpg" alt="Amath Ndong, secrétaire général" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Amath Ndong</b><small>Secrétaire général</small></div></li>
+  <li class="lead-role"><button type="button" class="bm-ph" aria-label="Agrandir la photo de Waly Ndiaye"><img src="photos/waly-ndiaye.jpg" alt="Waly Ndiaye, trésorier général" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Waly Ndiaye</b><small>Trésorier général</small></div></li>
  </ul>
- <h3 class="team-h">Commissions</h3>
- <ul class="team">
-  <li><span class="av" aria-hidden="true">PD</span><div><b>Pape Fally Diouf</b><small>Commission pédagogique</small></div></li>
-  <li><span class="av" aria-hidden="true">AW</span><div><b>Aliou Wagué</b><small>Commission sociale</small></div></li>
-  <li><span class="av" aria-hidden="true">AT</span><div><b>Amadou Tine</b><small>Commission communication</small></div></li>
-  <li><span class="av" aria-hidden="true">SD</span><div><b>Sanou Diouf</b><small>Commission santé</small></div></li>
-  <li><span class="av" aria-hidden="true">BD</span><div><b>Babacar Bouré Diouf</b><small>Commission relations extérieures</small></div></li>
-  <li><span class="av" aria-hidden="true">MD</span><div><b>Mouhamed Diop</b><small>Commission sport</small></div></li>
- </ul>
+ <h3 class="team-h">Les commissions</h3>
+ <div class="bm-coms">
+ <div class="bm-com" style="--n:1"><h4>Commission pédagogique</h4><ul class="bm">
+  <li><button type="button" class="bm-ph" aria-label="Agrandir la photo de Pape Faly Diouf"><img src="photos/pape-faly-diouf.jpg" alt="Pape Faly Diouf, président" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Pape Faly Diouf</b><small>Président</small></div></li>
+ </ul></div>
+ <div class="bm-com" style="--n:1"><h4>Commission sociale</h4><ul class="bm">
+  <li><button type="button" class="bm-ph" aria-label="Agrandir la photo de Aliou Wagué"><img src="photos/aliou-wague.jpg" alt="Aliou Wagué, président" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Aliou Wagué</b><small>Président</small></div></li>
+ </ul></div>
+ <div class="bm-com" style="--n:2"><h4>Commission communication</h4><ul class="bm">
+  <li><button type="button" class="bm-ph" aria-label="Agrandir la photo de Amadou Tine"><img src="photos/amadou-tine.jpg" alt="Amadou Tine, président" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Amadou Tine</b><small>Président</small></div></li>
+  <li><button type="button" class="bm-ph" aria-label="Agrandir la photo de Mansour Diouf"><img src="photos/mansour-diouf.jpg" alt="Mansour Diouf, vice-président" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Mansour Diouf</b><small>Vice-président</small></div></li>
+ </ul></div>
+ <div class="bm-com" style="--n:1"><h4>Commission d’organisation</h4><ul class="bm">
+  <li><button type="button" class="bm-ph" aria-label="Agrandir la photo de André Mendy"><img src="photos/andre-mendy.jpg" alt="André Mendy, président" loading="lazy" decoding="async" width="640" height="800"></button><div><b>André Mendy</b><small>Président</small></div></li>
+ </ul></div>
+ <div class="bm-com" style="--n:2"><h4>Commission féminine</h4><ul class="bm">
+  <li><button type="button" class="bm-ph" aria-label="Agrandir la photo de Monique Sigua Faye"><img src="photos/monique-sigua-faye.jpg" alt="Monique Sigua Faye, présidente" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Monique Sigua Faye</b><small>Présidente</small></div></li>
+  <li><button type="button" class="bm-ph" aria-label="Agrandir la photo de Coumba Bassine Niang"><img src="photos/coumba-bassine-niang.jpg" alt="Coumba Bassine Niang, adjointe" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Coumba Bassine Niang</b><small>Adjointe</small></div></li>
+ </ul></div>
+ <div class="bm-com" style="--n:2"><h4>Commission des relations extérieures</h4><ul class="bm">
+  <li><button type="button" class="bm-ph" aria-label="Agrandir la photo de Babacar Bouré Diouf"><img src="photos/babacar-boure-diouf.jpg" alt="Babacar Bouré Diouf, président" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Babacar Bouré Diouf</b><small>Président</small></div></li>
+  <li><button type="button" class="bm-ph" aria-label="Agrandir la photo de Ramata Fall"><img src="photos/ramata-fall.jpg" alt="Ramata Fall, adjointe" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Ramata Fall</b><small>Adjointe</small></div></li>
+ </ul></div>
+ <div class="bm-com" style="--n:1"><h4>Commission sport</h4><ul class="bm">
+  <li><button type="button" class="bm-ph" aria-label="Agrandir la photo de Mouhamed Diop"><img src="photos/mouhamed-diop.jpg" alt="Mouhamed Diop, président" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Mouhamed Diop</b><small>Président</small></div></li>
+ </ul></div>
+ <div class="bm-com" style="--n:2"><h4>Commission santé</h4><ul class="bm">
+  <li><span class="bm-ph bm-none" aria-hidden="true"><span>SD</span></span><div><b>Sanou Diouf</b><small>Responsable</small></div></li>
+  <li><button type="button" class="bm-ph" aria-label="Agrandir la photo de Babacar Ndiaye"><img src="photos/babacar-ndiaye.jpg" alt="Babacar Ndiaye, adjoint" loading="lazy" decoding="async" width="640" height="800"></button><div><b>Babacar Ndiaye</b><small>Adjoint</small></div></li>
+ </ul></div>
+ </div>
+ <dialog class="bm-dlg" id="bmdlg"><img alt=""><button type="button" class="bm-x" aria-label="Fermer">×</button></dialog>
 </div></section>
 
 <!-- ========== RECENSEMENT ========== -->
@@ -3093,6 +3137,12 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-copy]");if
  const chk=()=>u.classList.toggle("show",scrollY>600);
  addEventListener("scroll",()=>{if(!t){t=1;requestAnimationFrame(()=>{chk();t=0})}},{passive:true});
  u.onclick=()=>scrollTo({top:0,behavior:R?"auto":"smooth"});chk();})();
+</script>
+<script>
+// Bureau : agrandir une photo
+(()=>{const d=document.getElementById("bmdlg");if(!d)return;const im=d.querySelector("img");
+document.addEventListener("click",e=>{const b=e.target.closest("button.bm-ph");if(b){const i=b.querySelector("img");im.src=i.currentSrc||i.src;im.alt=i.alt;d.showModal();return}
+ if(e.target===d||e.target.closest(".bm-x"))d.close()});})();
 </script>
 
 </body>
